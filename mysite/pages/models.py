@@ -114,6 +114,8 @@ class CourseDetailPage(Page):
 
 
 class FAQPage(Page):
+    template = "pages/faq_page.html"
+
     introduction = RichTextField(
         blank=True,
         help_text="Optional introduction text above the FAQ list"
