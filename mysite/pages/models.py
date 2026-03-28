@@ -4,7 +4,7 @@ from wagtail.contrib.forms.models import AbstractFormField, AbstractEmailForm
 
 from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField, StreamField
-from wagtail.admin.panels import FieldPanel, InlinePanel
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 from modelcluster.fields import ParentalKey
@@ -178,15 +178,104 @@ class ContactPage(AbstractEmailForm):
     subpage_types = []
 
 
-class PricingPage(Page):
-    introduction = RichTextField(
-        blank=True,
-        help_text="Introduction text for the pricing page"
+class PricingTier(Orderable):
+    """
+    A single pricing tier (e.g., Explorer, Learner, Professional).
+
+    Orderable gives us a 'sort_order' field automatically —
+    you can drag-and-drop tiers in Wagtail admin to reorder them.
+
+    ParentalKey (from django-modelcluster) works like ForeignKey
+    but supports Wagtail's draft/preview system — tiers are saved
+    with the page as a unit, not independently.
+    """
+
+    page = ParentalKey(
+        'pages.PricingPage',
+        related_name='pricing_tiers',
+        on_delete=models.CASCADE,
     )
 
-    content_panels = Page.content_panels + [
-        FieldPanel("introduction"),
+    name = models.CharField(
+        max_length=50,
+        help_text="Tier name, e.g. 'Explorer', 'Learner', 'Professional'"
+    )
+
+    price = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        default=0,
+        help_text="Monthly price in EUR. Use 0 for free tier."
+    )
+
+    description = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Short tagline, e.g. 'Full access to one category'"
+    )
+
+    features = RichTextField(
+        features=['ul', 'bold'],
+        help_text="Feature list — use bullet points (ul) in the editor"
+    )
+
+    is_featured = models.BooleanField(
+        default=False,
+        help_text="Highlight this tier as 'Most Popular' (only set one!)"
+    )
+
+    button_text = models.CharField(
+        max_length=30,
+        default="Buy now",
+        help_text="Text on the CTA button, e.g. 'Get started', 'Buy now'"
+    )
+
+    stripe_price_id = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Stripe Price ID (e.g., price_1Abc123...). "
+                  "Leave blank for free tier."
+    )
+
+    panels = [
+        MultiFieldPanel([
+            FieldPanel('name'),
+            FieldPanel('price'),
+            FieldPanel('description'),
+        ], heading="Tier basics"),
+        FieldPanel('features'),
+        MultiFieldPanel([
+            FieldPanel('is_featured'),
+            FieldPanel('button_text'),
+            FieldPanel('stripe_price_id'),
+        ], heading="Display & payment"),
     ]
 
-    parent_page_types = ["home.HomePage"]
+    class Meta:
+        ordering = ['sort_order']
+
+    def __str__(self):
+        return f"{self.name} (€{self.price})"
+
+
+class PricingPage(Page):
+    """Pricing page with dynamic tiers managed via InlinePanel."""
+
+    introduction = RichTextField(blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('introduction'),
+        InlinePanel(
+            'pricing_tiers',
+            label="Pricing tier",
+            min_num=1,
+            max_num=5,
+        ),
+    ]
+
+    parent_page_types = ['home.HomePage']
     subpage_types = []
+    template = "pages/pricing_page.html"
+
+    class Meta:
+        verbose_name = "Pricing Page"
