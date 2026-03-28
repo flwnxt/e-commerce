@@ -429,6 +429,7 @@
             position: absolute;
             inset: 0;
             z-index: -1;
+            background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-bg) 60%);
         }
 
         .hero-bg img {
@@ -623,6 +624,8 @@
             padding: var(--space-xl);
             text-align: center;
             transition: transform var(--transition-base), box-shadow var(--transition-base);
+            display: flex;
+            flex-direction: column;
         }
 
         .pricing-card:hover {
@@ -671,6 +674,7 @@
             list-style: none;
             margin: var(--space-lg) 0;
             text-align: left;
+            flex: 1;
         }
 
         .pricing-features li {
@@ -733,11 +737,17 @@
             border: 1px solid var(--color-border);
             border-radius: var(--radius-lg);
             padding: var(--space-xl);
-            position: sticky;
-            top: 90px;
         }
 
         .course-sidebar .card-price { font-size: 1.6rem; margin-bottom: var(--space-md); }
+
+        .course-sidebar--mobile { display: block; margin-top: var(--space-xl); }
+        .course-sidebar--desktop { display: none; }
+
+        @media (min-width: 768px) {
+            .course-sidebar--mobile { display: none; }
+            .course-sidebar--desktop { display: block; position: sticky; top: 90px; }
+        }
 
         .course-meta-list {
             list-style: none;
@@ -760,10 +770,6 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: var(--space-sm);
-        }
-
-        @media (min-width: 540px) {
-            .learning-points { grid-template-columns: repeat(2, 1fr); }
         }
 
         .learning-points li {

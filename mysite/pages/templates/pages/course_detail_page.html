@@ -13,8 +13,8 @@
         </div>
 
         <div class="course-hero">
-            {# ── Left column: image + content ── #}
-            <div>
+            {# ── Left column ── #}
+            <div class="course-main">
                 {% if page.course_image %}
                     {% image page.course_image fill-800x500 as course_img %}
                     <img class="course-hero-img" src="{{ course_img.url }}" alt="{{ page.title }}">
@@ -23,8 +23,24 @@
                 <h1 class="mt-lg">{{ page.title }}</h1>
 
                 {% if page.description %}
-                    <p class="text-muted mt-sm" style="font-size:1.05rem;">{{ page.description }}</p>
+                    <div class="text-muted mt-sm rich-text" style="font-size:1.05rem;">{{ page.description|richtext }}</div>
                 {% endif %}
+
+                {# ── Mobile-only sidebar (shown below description) ── #}
+                <div class="course-sidebar course-sidebar--mobile">
+                    {% if page.price %}
+                        <p class="card-price">&euro;{{ page.price }}</p>
+                    {% endif %}
+                    <ul class="course-meta-list">
+                        {% if page.instructor %}
+                            <li><span>Instructor</span> <span>{{ page.instructor }}</span></li>
+                        {% endif %}
+                        <li><span>Category</span> <span>{{ page.get_parent.title }}</span></li>
+                        <li><span>Format</span> <span>Online / Self-paced</span></li>
+                    </ul>
+                    <a href="#" class="btn btn-primary" style="width:100%; justify-content:center;">Buy This Course</a>
+                    <a href="{% slugurl 'pricing' %}" class="btn btn-outline mt-sm" style="width:100%; justify-content:center;">View All Plans</a>
+                </div>
 
                 {# ── StreamField content ── #}
                 {% if page.course_content %}
@@ -41,7 +57,6 @@
                                 <img class="block-image" src="{{ sf_img.url }}" alt="{{ block.value.title }}">
 
                             {% elif block.block_type == 'learning_point' %}
-                                {# Collect consecutive learning_points into a list #}
                                 {% if forloop.first or prev_block_type != 'learning_point' %}
                                     <ul class="learning-points mt-md">
                                 {% endif %}
@@ -55,12 +70,11 @@
                 {% endif %}
             </div>
 
-            {# ── Right column: sticky sidebar ── #}
-            <div class="course-sidebar">
+            {# ── Desktop-only sidebar (shown on the right) ── #}
+            <div class="course-sidebar course-sidebar--desktop">
                 {% if page.price %}
                     <p class="card-price">&euro;{{ page.price }}</p>
                 {% endif %}
-
                 <ul class="course-meta-list">
                     {% if page.instructor %}
                         <li><span>Instructor</span> <span>{{ page.instructor }}</span></li>
@@ -68,13 +82,8 @@
                     <li><span>Category</span> <span>{{ page.get_parent.title }}</span></li>
                     <li><span>Format</span> <span>Online / Self-paced</span></li>
                 </ul>
-
-                <a href="#" class="btn btn-primary" style="width:100%; justify-content:center;">
-                    Buy This Course
-                </a>
-                <a href="{% slugurl 'pricing' %}" class="btn btn-outline mt-sm" style="width:100%; justify-content:center;">
-                    View All Plans
-                </a>
+                <a href="#" class="btn btn-primary" style="width:100%; justify-content:center;">Buy This Course</a>
+                <a href="{% slugurl 'pricing' %}" class="btn btn-outline mt-sm" style="width:100%; justify-content:center;">View All Plans</a>
             </div>
         </div>
     </div>
