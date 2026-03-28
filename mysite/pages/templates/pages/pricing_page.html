@@ -2,61 +2,58 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-<section class="section">
+<section class="pricing-hero">
     <div class="container">
-        <div class="breadcrumb">
-            <a href="/">Home</a> <span>/</span> {{ page.title }}
-        </div>
+        <h1>{{ page.title }}</h1>
+        {% if page.introduction %}
+            <div class="pricing-intro">{{ page.introduction|richtext }}</div>
+        {% endif %}
+    </div>
+</section>
 
-        <div class="section-header text-center" style="max-width: 600px; margin-inline: auto;">
-            <h1>{{ page.title }}</h1>
-            {% if page.introduction %}
-                <div class="rich-text text-muted">{{ page.introduction|richtext }}</div>
-            {% endif %}
-        </div>
+<section class="pricing-section">
+    <div class="container">
+        <div class="pricing-grid">
+            {% for tier in page.pricing_tiers.all %}
+            <div class="pricing-card{% if tier.is_featured %} pricing-card--featured{% endif %}">
 
-        {# ── Pricing tiers — hardcoded placeholder, will become dynamic in Step 9 ── #}
-        <div class="pricing-grid mt-xl">
-            {# Free tier #}
-            <div class="pricing-card fade-in-up">
-                <h3>Free</h3>
-                <p class="text-muted" style="font-size:0.9rem;">Get started for free</p>
-                <p class="pricing-amount">&euro;0</p>
-                <ul class="pricing-features">
-                    <li>1 free course preview</li>
-                    <li>Community access</li>
-                    <li>Email support</li>
-                </ul>
-                <a href="#" class="btn btn-outline" style="width:100%; justify-content:center;">Get Started</a>
+                {% if tier.is_featured %}
+                    <span class="pricing-badge">Most Popular</span>
+                {% endif %}
+
+                <h3 class="pricing-name">{{ tier.name }}</h3>
+
+                <div class="pricing-price">
+                    {% if tier.price == 0 %}
+                        <span class="pricing-amount">Free</span>
+                    {% else %}
+                        <span class="pricing-currency">€</span>
+                        <span class="pricing-amount">{{ tier.price|floatformat:"0" }}</span>
+                        <span class="pricing-period">/month</span>
+                    {% endif %}
+                </div>
+
+                {% if tier.description %}
+                    <p class="pricing-description">{{ tier.description }}</p>
+                {% endif %}
+
+                <div class="pricing-features">
+                    {{ tier.features|richtext }}
+                </div>
+
+                {% if tier.stripe_price_id %}
+                    <a href="{% url 'create_checkout_session' %}?price_id={{ tier.stripe_price_id }}"
+                       class="pricing-button{% if tier.is_featured %} pricing-button--featured{% endif %}">
+                        {{ tier.button_text }}
+                    </a>
+                {% else %}
+                    <a href="/" class="pricing-button">
+                        {{ tier.button_text }}
+                    </a>
+                {% endif %}
+
             </div>
-
-            {# Pro tier #}
-            <div class="pricing-card featured fade-in-up">
-                <h3>Pro</h3>
-                <p class="text-muted" style="font-size:0.9rem;">For serious learners</p>
-                <p class="pricing-amount">&euro;19<span>/mo</span></p>
-                <ul class="pricing-features">
-                    <li>All courses included</li>
-                    <li>Downloadable resources</li>
-                    <li>Priority email support</li>
-                    <li>Certificate of completion</li>
-                </ul>
-                <a href="#" class="btn btn-primary" style="width:100%; justify-content:center;">Subscribe</a>
-            </div>
-
-            {# Lifetime tier #}
-            <div class="pricing-card fade-in-up">
-                <h3>Lifetime</h3>
-                <p class="text-muted" style="font-size:0.9rem;">One-time payment</p>
-                <p class="pricing-amount">&euro;149</p>
-                <ul class="pricing-features">
-                    <li>Everything in Pro</li>
-                    <li>Lifetime access</li>
-                    <li>Future courses included</li>
-                    <li>1-on-1 Q&amp;A sessions</li>
-                </ul>
-                <a href="#" class="btn btn-outline" style="width:100%; justify-content:center;">Buy Lifetime</a>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
