@@ -2,6 +2,12 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
+<nav class="breadcrumb">
+    <div class="container">
+        <a href="/">Home</a> / {{ page.title }}
+    </div>
+</nav>
+
 <section class="pricing-hero">
     <div class="container">
         <h1>{{ page.title }}</h1>
@@ -15,11 +21,8 @@
     <div class="container">
         <div class="pricing-grid">
             {% for tier in page.pricing_tiers.all %}
-            <div class="pricing-card{% if tier.is_featured %} pricing-card--featured{% endif %}">
 
-                {% if tier.is_featured %}
-                    <span class="pricing-badge">Most Popular</span>
-                {% endif %}
+                <div class="pricing-card{% if tier.is_featured %} featured{% endif %}">
 
                 <h3 class="pricing-name">{{ tier.name }}</h3>
 

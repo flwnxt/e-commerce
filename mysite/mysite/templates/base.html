@@ -670,6 +670,33 @@
             color: var(--color-text-muted);
         }
 
+        .pricing-button {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            border: 1.5px solid var(--color-accent);
+            border-radius: var(--radius-md);
+            color: var(--color-accent);
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background var(--transition-base), color var(--transition-base);
+            margin-top: auto;
+        }
+
+        .pricing-button:hover {
+            background: var(--color-accent);
+            color: var(--color-accent-text, #fff);
+        }
+
+        .pricing-button--featured {
+            background: var(--color-accent);
+            color: var(--color-accent-text, #fff);
+        }
+
+        .pricing-button--featured:hover {
+            opacity: 0.9;
+        }
+
         .pricing-features {
             list-style: none;
             margin: var(--space-lg) 0;
@@ -677,17 +704,60 @@
             flex: 1;
         }
 
-        .pricing-features li {
+        .pricing-features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pricing-features ul li {
             padding: var(--space-sm) 0;
             border-bottom: 1px solid var(--color-border);
             color: var(--color-text-muted);
             font-size: 0.9rem;
         }
 
-        .pricing-features li::before {
+        .pricing-features ul li::before {
             content: '✓ ';
             color: var(--color-accent);
             font-weight: 700;
+        }
+
+        .pricing-hero { padding-top: 1rem; text-align: center; }
+
+        .pricing-section { padding-bottom: 2rem; }
+
+        .pricing-hero h1 { margin-bottom: 2rem; }
+
+        .pricing-intro { margin-bottom: 2rem; }
+
+        /* Payment result pages */
+
+        .payment-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 1.5rem;
+        }
+
+        .payment-icon--success {
+            background: var(--color-accent-light, #d8f3dc);
+            color: var(--color-accent, #2D6A4F);
+        }
+
+        .payment-icon--cancel {
+            background: #fce4e4;
+            color: #c0392b;
+        }
+
+        [data-theme="dark"] .payment-icon--cancel {
+            background: #4a1515;
+            color: #e74c3c;
         }
 
         /* ══════════════════════════════════════════

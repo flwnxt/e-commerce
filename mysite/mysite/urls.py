@@ -5,14 +5,24 @@ from django.contrib import admin
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
+from wagtail import urls as wagtailcore_urls
 
 from search import views as search_views
+
+from pages.views import create_checkout_session, payment_success, payment_cancel
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
+
+    # Stripe checkout URLs — MUST be before Wagtail catch-all
+    path('payment/checkout/', create_checkout_session, name='create_checkout_session'),
+    path('payment/success/', payment_success, name='payment_success'),
+    path('payment/cancel/', payment_cancel, name='payment_cancel'),
+
     path("search/", search_views.search, name="search"),
+    path('', include(wagtailcore_urls)),  # Wagtail catch-all — LAST
 ]
 
 
