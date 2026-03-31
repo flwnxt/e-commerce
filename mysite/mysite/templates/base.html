@@ -372,6 +372,8 @@
             border-radius: var(--radius-md);
             overflow: hidden;
             transition: transform var(--transition-base), box-shadow var(--transition-base);
+            display: flex;
+            flex-direction: column;
         }
 
         .card:hover {
@@ -380,12 +382,26 @@
         }
 
         .card-img {
-            width: 100%;
+            width: calc(100% - 1.5rem);
             aspect-ratio: 16/10;
             object-fit: cover;
+            margin: 0.75rem auto 0;
+            border-radius: var(--radius-md);
         }
 
-        .card-body { padding: var(--space-lg); }
+        .card-body {
+            padding: var(--space-lg);
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+
+        .card-body .btn {
+            display: flex !important;
+            justify-content: center !important;
+            width: 100%;
+}
+
+        }
         .card-body h3 { margin-bottom: var(--space-sm); }
 
         .card-meta {
@@ -399,21 +415,43 @@
             font-size: 1.3rem;
             font-weight: 700;
             color: var(--color-accent);
+            margin-top: auto;
+        }
+
+        .card-img-placeholder {
+            width: calc(100% - 1.5rem);
+            aspect-ratio: 16/10;
+            background: var(--color-accent-light);
+            display: grid;
+            place-items: center;
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            margin: 0.75rem auto 0;
+            border-radius: var(--radius-md);
+            text-align: center;
+            padding: var(--space-md);
         }
 
         /* ── Card grid ── */
         .card-grid {
-            display: grid;
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-wrap: wrap;
             gap: var(--space-lg);
+            justify-content: center;
+        }
+
+        .card-grid .card {
+            width: 100%;
         }
 
         @media (min-width: 540px) {
-            .card-grid { grid-template-columns: repeat(2, 1fr); }
+            .card-grid .card { width: calc(50% - var(--space-lg) / 2); }
         }
 
         @media (min-width: 900px) {
-            .card-grid { grid-template-columns: repeat(3, 1fr); }
+            .card-grid .card { width: calc(33.333% - var(--space-lg) * 2 / 3); }
         }
 
         /* ══════════════════════════════════════════
@@ -423,6 +461,13 @@
             position: relative;
             padding: var(--space-3xl) 0;
             overflow: hidden;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-md);       /* was var(--space-sm) */
+            justify-content: center;
         }
 
         .hero-bg {
@@ -460,11 +505,10 @@
             margin-bottom: var(--space-xl);
         }
 
-        .hero-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--space-sm);
-            justify-content: center;
+        .card-grid--2col {
+            max-width: 800px;
+            margin-inline: auto;
+            grid-template-columns: repeat(2, 1fr) !important;
         }
 
         @media (min-width: 768px) {
@@ -480,6 +524,7 @@
 
         .section-header {
             margin-bottom: var(--space-xl);
+            text-align: center;
         }
 
         .section-header h2 { margin-bottom: var(--space-sm); }
@@ -968,6 +1013,11 @@
             .site-header, .site-footer, .theme-toggle, .nav-toggle { display: none; }
             body { background: #fff; color: #000; }
         }
+
+        .card-body a.btn.btn-outline {
+            display: block;
+            text-align: center;
+        }
     </style>
 
     {% block extra_css %}{% endblock %}
@@ -1024,7 +1074,7 @@
                         <span class="logo-icon">L</span>
                         LearnHub
                     </a>
-                    <p>A digital learning platform for Programming, QA, and Cat Care.</p>
+                    <p>A digital learning platform for Programming, QA, and COBOL courses.</p>
                 </div>
                 <div class="footer-links">
                     <h4>Platform</h4>

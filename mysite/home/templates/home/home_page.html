@@ -40,6 +40,10 @@
                         {% if course.course_image %}
                             {% image course.course_image fill-600x380 as thumb %}
                             <img class="card-img" src="{{ thumb.url }}" alt="{{ course.title }}">
+                        {% else %}
+                            <div class="card-img-placeholder">
+                                <span>{{ course.title|truncatewords:3 }}</span>
+                            </div>
                         {% endif %}
                         <div class="card-body">
                             <h3><a href="{% pageurl course %}">{{ course.title }}</a></h3>
@@ -49,6 +53,7 @@
                             {% if course.price %}
                                 <p class="card-price">&euro;{{ course.price }}</p>
                             {% endif %}
+                            <a href="{% pageurl course %}" class="btn btn-outline mt-md">View course</a>
                         </div>
                     </article>
                 {% endfor %}
