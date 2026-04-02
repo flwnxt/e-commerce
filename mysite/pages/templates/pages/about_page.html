@@ -13,15 +13,17 @@
         </div>
 
         <div class="about-layout">
-            <div class="rich-text">
-                {{ page.body|richtext }}
-            </div>
             {% if page.team_image %}
                 <div class="about-image">
                     {% image page.team_image fill-700x525 as team_img %}
                     <img src="{{ team_img.url }}" alt="{{ page.team_image.title }}">
                 </div>
             {% endif %}
+
+            <div class="rich-text">
+                {{ page.body|richtext }}
+            </div>
+
         </div>
     </div>
 </section>

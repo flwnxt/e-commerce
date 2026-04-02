@@ -113,7 +113,14 @@
         }
 
         html, body {
-            overflow-x: hidden;
+            overflow-x: clip;
+        }
+
+        .about-layout p,
+        .card-body p,
+        .course-main p {
+            text-align: justify;
+            hyphens: auto;
         }
 
         img { max-width: 100%; height: auto; display: block; }
@@ -304,25 +311,52 @@
         @media (min-width: 768px) {
             :root { --container-padding: var(--space-xl); }
 
-            .header-inner { height: 70px; }
+              .header-inner {
+                display: grid;
+                grid-template-columns: 1fr auto 1fr;
+                align-items: center;
+                height: 70px;
+            }
+
+            .site-logo {
+                justify-self: start;
+            }
+
+            nav {
+                justify-self: center;
+            }
+
+            .header-actions {
+                justify-self: end;
+            }
 
             .nav-toggle { display: none; }
 
             .nav-links {
                 position: static;
-                flex-direction: row;
+                top: auto;
+                right: auto;
                 width: auto;
                 max-width: none;
                 height: auto;
-                padding: 0;
+                transform: none;
+                transition: none;
                 background: none;
-                box-shadow: none;
+                padding: 0;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
                 gap: var(--space-xs);
+                box-shadow: none;
             }
 
             .nav-links a {
                 font-size: 0.9rem;
                 padding: var(--space-xs) var(--space-sm);
+            }
+
+            nav ul {
+                margin: 0;
             }
 
             .nav-overlay { display: none !important; }
@@ -388,14 +422,6 @@
         .card:hover {
             transform: translateY(-3px);
             box-shadow: var(--shadow-md);
-        }
-
-        .card-img {
-            width: calc(100% - 1.5rem);
-            aspect-ratio: 16/10;
-            object-fit: cover;
-            margin: 0.75rem auto 0;
-            border-radius: var(--radius-md);
         }
 
         .card-body {
@@ -670,7 +696,7 @@
             text-align: left;
         }
 
-        .contact-form text-center {
+        .contact-form .text-center {
             max-width: 600px;
             margin-inline: auto;
         }
@@ -875,7 +901,7 @@
         }
 
         @media (min-width: 768px) {
-            .course-hero { grid-template-columns: 1.2fr 1fr; align-items: start; }
+            .course-hero { grid-template-columns: 1.2fr 1fr; }
         }
 
         .course-hero-img {
@@ -894,7 +920,12 @@
 
         .course-sidebar .card-price { font-size: 1.6rem; margin-bottom: var(--space-md); }
 
-        .course-sidebar--mobile { display: block; margin-top: var(--space-xl); }
+        .course-main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-sidebar--mobile { display: block; margin-top: var(--space-xl); order: 99; }
         .course-sidebar--desktop { display: none; }
 
         .card-img-wrapper {
@@ -908,6 +939,8 @@
             aspect-ratio: 16/10;
             object-fit: cover;
             transition: transform 0.4s ease, filter 0.4s ease;
+            margin: 0.75rem auto 0;
+            border-radius: var(--radius-md);
         }
 
         /* overlay subtil */
@@ -934,11 +967,9 @@
 
         @media (min-width: 768px) {
             .course-sidebar--mobile { display: none; }
-            .course-sidebar--desktop { display: block; position: sticky; top: 90px; }
-
-            .header-inner {
-                height: 70px;
-            }
+            .course-sidebar--desktop { display: block; position: sticky; top: 90px; align-self: start; }
+            .course-main { display: block; min-height: 0; }
+        }
 
         .course-meta-list {
             list-style: none;
