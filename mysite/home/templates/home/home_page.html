@@ -39,7 +39,9 @@
                     <article class="card fade-in-up">
                         {% if course.course_image %}
                             {% image course.course_image fill-600x380 as thumb %}
-                            <img class="card-img" src="{{ thumb.url }}" alt="{{ course.title }}">
+                            <div class="card-img-wrapper">
+                                <img class="card-img" src="{{ thumb.url }}" alt="{{ course.title }}">
+                            </div>
                         {% else %}
                             <div class="card-img-placeholder">
                                 <span>{{ course.title|truncatewords:3 }}</span>

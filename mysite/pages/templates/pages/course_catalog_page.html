@@ -38,7 +38,7 @@
                             <p class="card-meta">By {{ course.instructor }}</p>
                         {% endif %}
                         {% if course.description %}
-                            <p class="text-muted">{{ course.description|truncatewords:25 }}</p>
+                            <p class="text-muted card-description">{{ course.description|striptags|truncatewords:25 }}</p>
                         {% endif %}
                         {% if course.price %}
                             <p class="card-price mt-sm">&euro;{{ course.price }}</p>

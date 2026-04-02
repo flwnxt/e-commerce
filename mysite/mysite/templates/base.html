@@ -112,6 +112,10 @@
             flex-direction: column;
         }
 
+        html, body {
+            overflow-x: hidden;
+        }
+
         img { max-width: 100%; height: auto; display: block; }
         a { color: var(--color-accent); text-decoration: none; transition: color var(--transition-fast); }
         a:hover { color: var(--color-accent-hover); }
@@ -145,7 +149,7 @@
         .site-header {
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 200;
             background: var(--color-surface);
             border-bottom: 1px solid var(--color-border);
             backdrop-filter: blur(12px);
@@ -213,29 +217,34 @@
         .nav-links {
             position: fixed;
             top: 0;
-            right: -100%;
+            right: 0;
             width: 80%;
             max-width: 320px;
             height: 100vh;
+
+            transform: translateX(100%);
+            transition: transform var(--transition-slow);
+
             background: var(--color-surface);
             padding: 80px var(--space-xl) var(--space-xl);
             display: flex;
             flex-direction: column;
             gap: var(--space-xs);
-            transition: right var(--transition-slow);
             box-shadow: var(--shadow-lg);
-            z-index: 105;
+            z-index: 210;
             list-style: none;
         }
 
-        .nav-links.open { right: 0; }
+        .nav-links.open {
+            transform: translateX(0);
+        }
 
         .nav-overlay {
             display: none;
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.4);
-            z-index: 102;
+            z-index: 190;
         }
 
         .nav-overlay.visible { display: block; }
@@ -394,14 +403,14 @@
             display: flex;
             flex-direction: column;
             flex: 1;
+        }
 
         .card-body .btn {
             display: flex !important;
             justify-content: center !important;
             width: 100%;
-}
-
         }
+
         .card-body h3 { margin-bottom: var(--space-sm); }
 
         .card-meta {
@@ -417,6 +426,7 @@
             color: var(--color-accent);
             margin-top: auto;
         }
+
 
         .card-img-placeholder {
             width: calc(100% - 1.5rem);
@@ -557,10 +567,18 @@
         /* ══════════════════════════════════════════
            FAQ ACCORDION
            ══════════════════════════════════════════ */
-        .faq-list { max-width: 720px; }
+        .faq-list { max-width: 720px; margin-inline: auto; }
 
         .faq-item {
             border-bottom: 1px solid var(--color-border);
+        }
+
+        .section-header h1 {
+            margin-bottom: var(--space-lg);
+        }
+
+        .section-header.text-center p {
+            margin-inline: auto;
         }
 
         .faq-question {
@@ -642,6 +660,26 @@
         }
 
         .form-group textarea { min-height: 140px; resize: vertical; }
+
+        .contact-form {
+            max-width: 600px;
+            margin-inline: auto;
+        }
+
+        .contact-form .form-group {
+            text-align: left;
+        }
+
+        .contact-form text-center {
+            max-width: 600px;
+            margin-inline: auto;
+        }
+
+        .contact-form .btn {
+            display: block;
+            margin-inline: auto;
+            width: fit-content;
+        }
 
         /* ══════════════════════════════════════════
            PRICING CARDS
@@ -859,10 +897,48 @@
         .course-sidebar--mobile { display: block; margin-top: var(--space-xl); }
         .course-sidebar--desktop { display: none; }
 
+        .card-img-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-md);
+        }
+
+        .card-img {
+            width: 100%;
+            aspect-ratio: 16/10;
+            object-fit: cover;
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+
+        /* overlay subtil */
+        .card-img-wrapper::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(20, 20, 19, 0.38);
+            opacity: 1;
+            transition: opacity 0.35s ease, background 0.35s ease;
+            pointer-events: none;
+        }
+
+        /* hover */
+        .card:hover .card-img {
+            transform: scale(1.05);
+            filter: brightness(1.08);
+        }
+
+        .card:hover .card-img-wrapper::after {
+            opacity: 0;
+        }
+
+
         @media (min-width: 768px) {
             .course-sidebar--mobile { display: none; }
             .course-sidebar--desktop { display: block; position: sticky; top: 90px; }
-        }
+
+            .header-inner {
+                height: 70px;
+            }
 
         .course-meta-list {
             list-style: none;
@@ -1018,6 +1094,7 @@
             display: block;
             text-align: center;
         }
+
     </style>
 
     {% block extra_css %}{% endblock %}
@@ -1125,21 +1202,38 @@
         const navLinks = document.getElementById('navLinks');
         const navOverlay = document.getElementById('navOverlay');
 
-        function toggleNav() {
-            navToggle.classList.toggle('active');
-            navLinks.classList.toggle('open');
-            navOverlay.classList.toggle('visible');
-            document.body.style.overflow = navLinks.classList.contains('open') ? 'hidden' : '';
+        function openNav() {
+            navToggle.classList.add('active');
+            navLinks.classList.add('open');
+            navOverlay.classList.add('visible');
+            document.body.style.overflow = 'hidden';
         }
 
-        navToggle.addEventListener('click', toggleNav);
-        navOverlay.addEventListener('click', toggleNav);
+        function closeNav() {
+            navToggle.classList.remove('active');
+            navLinks.classList.remove('open');
+            navOverlay.classList.remove('visible');
+            document.body.style.overflow = '';
+        }
+
+        navToggle.addEventListener('click', () => {
+            if (navLinks.classList.contains('open')) {
+                closeNav();
+            } else {
+                openNav();
+            }
+        });
+
+        navOverlay.addEventListener('click', closeNav);
 
         // Close on link click (mobile)
         navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (navLinks.classList.contains('open')) toggleNav();
-            });
+            link.addEventListener('click', closeNav);
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeNav();
         });
 
         /* ── FAQ accordion ── */
